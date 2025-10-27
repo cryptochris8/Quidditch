@@ -520,32 +520,27 @@ startServer(world => {
     playerEntity.setGravityScale(0); // No gravity - players can fly freely
 
     // Enhanced movement speeds for broomstick flying
-    playerEntity.controller.jumpVelocity = 20;  // Space key for upward thrust
+    playerEntity.controller.jumpVelocity = 0;  // Disable default jump - we'll handle it custom
     playerEntity.controller.walkVelocity = FLYING_SPEED.horizontal;  // WASD horizontal movement
     playerEntity.controller.runVelocity = FLYING_SPEED.turbo;   // Shift + WASD for faster flying
 
     // Custom vertical flight controls (Space to ascend, Ctrl to descend)
     // Using continuous force application for smoother flying
-    let lastLogTime = 0;
     playerEntity.controller.on(BaseEntityControllerEvent.TICK_WITH_PLAYER_INPUT, ({ input, deltaTimeMs }) => {
       const dt = deltaTimeMs / 1000; // Convert to seconds
-
-      // Debug logging (once per second)
-      const now = Date.now();
-      if (now - lastLogTime > 1000 && (input.space || input.ctrl)) {
-        console.log(`🎮 Flying controls: Space=${input.space}, Ctrl=${input.ctrl}, Mass=${playerEntity.mass}`);
-        lastLogTime = now;
-      }
+      const forceMultiplier = 25; // Stronger force for noticeable effect
 
       // Space key - fly upward (continuous force)
       if (input.space) {
-        const upwardForce = FLYING_SPEED.vertical * playerEntity.mass * dt * 60; // Scaled for 60fps
+        const upwardForce = forceMultiplier * playerEntity.mass;
         playerEntity.applyImpulse({ x: 0, y: upwardForce, z: 0 });
+        console.log(`⬆️ Flying UP - Applied force: ${upwardForce}`);
       }
       // Ctrl key - fly downward (continuous force)
       if (input.ctrl) {
-        const downwardForce = -FLYING_SPEED.vertical * playerEntity.mass * dt * 60;
+        const downwardForce = -forceMultiplier * playerEntity.mass;
         playerEntity.applyImpulse({ x: 0, y: downwardForce, z: 0 });
+        console.log(`⬇️ Flying DOWN - Applied force: ${downwardForce}`);
       }
     });
 
