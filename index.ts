@@ -525,15 +525,26 @@ startServer(world => {
     playerEntity.controller.runVelocity = FLYING_SPEED.turbo;   // Shift + WASD for faster flying
 
     // Custom vertical flight controls (Space to ascend, Ctrl to descend)
-    playerEntity.controller.on(BaseEntityControllerEvent.TICK_WITH_PLAYER_INPUT, ({ input }) => {
-      // Space key - fly upward
+    // Using continuous force application for smoother flying
+    let lastLogTime = 0;
+    playerEntity.controller.on(BaseEntityControllerEvent.TICK_WITH_PLAYER_INPUT, ({ input, deltaTimeMs }) => {
+      const dt = deltaTimeMs / 1000; // Convert to seconds
+
+      // Debug logging (once per second)
+      const now = Date.now();
+      if (now - lastLogTime > 1000 && (input.space || input.ctrl)) {
+        console.log(`🎮 Flying controls: Space=${input.space}, Ctrl=${input.ctrl}, Mass=${playerEntity.mass}`);
+        lastLogTime = now;
+      }
+
+      // Space key - fly upward (continuous force)
       if (input.space) {
-        const upwardForce = FLYING_SPEED.vertical * playerEntity.mass;
+        const upwardForce = FLYING_SPEED.vertical * playerEntity.mass * dt * 60; // Scaled for 60fps
         playerEntity.applyImpulse({ x: 0, y: upwardForce, z: 0 });
       }
-      // Ctrl key - fly downward
-      else if (input.ctrl) {
-        const downwardForce = -FLYING_SPEED.vertical * playerEntity.mass;
+      // Ctrl key - fly downward (continuous force)
+      if (input.ctrl) {
+        const downwardForce = -FLYING_SPEED.vertical * playerEntity.mass * dt * 60;
         playerEntity.applyImpulse({ x: 0, y: downwardForce, z: 0 });
       }
     });
