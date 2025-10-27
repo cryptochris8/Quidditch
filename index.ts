@@ -36,6 +36,7 @@ interface QuidditchPlayerState {
   stamina: number;
   stunnedUntil: number;
   carryingBall?: BallEntity;
+  broomstick?: Entity; // Visual broomstick attachment
 }
 
 interface GoalZone {
@@ -513,6 +514,18 @@ startServer(world => {
     playerEntity.controller.walkVelocity = 10;
     playerEntity.controller.runVelocity = 18;
 
+    // Attach broomstick visual
+    const broomstick = new Entity({
+      modelUri: 'models/items/fishing-rod.gltf',
+      modelScale: 1.2,
+      parent: playerEntity,
+      name: 'Broomstick',
+    });
+    broomstick.spawn(world, { x: 0, y: 0, z: 0 });
+    // Position and rotate the broom to look like player is riding it
+    broomstick.setPosition({ x: 0, y: -0.5, z: 0 });
+    broomstick.setRotation({ x: 0, y: 1.57, z: 0 }); // 90 degrees rotation
+
     console.log(`👤 Spawned ${playerName} for team ${team.name} at:`, team.spawn);
 
     quidditchPlayers.set(player.id, {
@@ -520,6 +533,7 @@ startServer(world => {
       teamId: team.id,
       stamina: 1,
       stunnedUntil: 0,
+      broomstick,
     });
 
     // Load UI
