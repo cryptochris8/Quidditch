@@ -524,20 +524,20 @@ startServer(world => {
     playerEntity.controller.walkVelocity = FLYING_SPEED.horizontal;  // WASD horizontal movement
     playerEntity.controller.runVelocity = FLYING_SPEED.turbo;   // Shift + WASD for faster flying
 
-    // Custom vertical flight controls (Space to ascend, Ctrl to descend)
+    // Custom vertical flight controls (Space to ascend, C to descend)
     // Using continuous force application for smoother flying
     playerEntity.controller.on(BaseEntityControllerEvent.TICK_WITH_PLAYER_INPUT, ({ input, deltaTimeMs }) => {
       const dt = deltaTimeMs / 1000; // Convert to seconds
       const forceMultiplier = 25; // Stronger force for noticeable effect
 
-      // Space key - fly upward (continuous force)
-      if (input.space) {
+      // Space key (sp) - fly upward (continuous force)
+      if (input.sp) {
         const upwardForce = forceMultiplier * playerEntity.mass;
         playerEntity.applyImpulse({ x: 0, y: upwardForce, z: 0 });
         console.log(`⬆️ Flying UP - Applied force: ${upwardForce}`);
       }
-      // Ctrl key - fly downward (continuous force)
-      if (input.ctrl) {
+      // C key - fly downward (continuous force)
+      if (input.c) {
         const downwardForce = -forceMultiplier * playerEntity.mass;
         playerEntity.applyImpulse({ x: 0, y: downwardForce, z: 0 });
         console.log(`⬇️ Flying DOWN - Applied force: ${downwardForce}`);
@@ -573,7 +573,7 @@ startServer(world => {
     const colorHex = team.color.replace('#', '');
     world.chatManager.sendPlayerMessage(player, `🧙 Welcome to Quidditch!`, colorHex);
     world.chatManager.sendPlayerMessage(player, `You've been assigned to ${team.name}!`, colorHex);
-    world.chatManager.sendPlayerMessage(player, 'Controls: WASD to fly, Space=UP, Ctrl=DOWN, Shift=TURBO');
+    world.chatManager.sendPlayerMessage(player, 'Controls: WASD=fly, SPACE=UP, C=DOWN, SHIFT=TURBO');
     world.chatManager.sendPlayerMessage(player, 'Use /pickup or /throw to grab and toss balls!');
 
     announce(`${playerName} joined ${team.name}!`);

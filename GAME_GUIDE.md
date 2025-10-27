@@ -56,7 +56,7 @@ npx hytopia dev
 **Movement (True Flying Physics):**
 - `WASD` - Fly in horizontal directions (no gravity!)
 - `Space` - Ascend / Fly upward
-- `Ctrl` - Descend / Fly downward
+- `C` - Descend / Fly downward
 - `Shift + WASD` - Fly faster (turbo mode)
 - Players have **zero gravity** - you fly freely in all 3 dimensions like on a broomstick!
 
