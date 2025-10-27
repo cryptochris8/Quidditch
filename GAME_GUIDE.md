@@ -53,10 +53,11 @@ npx hytopia dev
 
 ### Player Controls
 
-**Movement:**
-- `WASD` - Fly in cardinal directions
-- `Space` - Ascend
-- `Shift` - Descend
+**Movement (True Flying Physics):**
+- `WASD` - Fly in horizontal directions (no gravity!)
+- `Space` - Ascend / Jump upward
+- `Shift + WASD` - Fly faster (turbo mode)
+- Players have **zero gravity** - you fly freely like on a broomstick!
 
 **Actions:**
 - `/pickup` or `/throw` - Pick up nearby ball or throw carried ball
@@ -88,13 +89,20 @@ npx hytopia dev
 **Physics Configuration:**
 ```typescript
 {
+  // Ball physics
   maxSpeed: 22,
   accel: 45,
   lift: 30,
   gravity: 16,
   drag: 0.08,
   bludgerKnockback: 28,
-  stunMs: 800
+  stunMs: 800,
+
+  // Player physics (TRUE FLYING)
+  gravityScale: 0,      // Zero gravity - free flight!
+  jumpVelocity: 20,     // Upward thrust
+  walkVelocity: 12,     // Normal flying speed
+  runVelocity: 22       // Turbo flying speed
 }
 ```
 

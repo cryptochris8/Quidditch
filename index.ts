@@ -509,10 +509,13 @@ startServer(world => {
 
     playerEntity.spawn(world, team.spawn);
 
-    // Enable flight mode for Quidditch - increase jump/movement for flying feel
-    playerEntity.controller.jumpVelocity = 15;
-    playerEntity.controller.walkVelocity = 10;
-    playerEntity.controller.runVelocity = 18;
+    // Enable TRUE FLYING mode for Quidditch - disable gravity!
+    playerEntity.setGravityScale(0); // No gravity - players can fly freely
+
+    // Enhanced movement speeds for broomstick flying
+    playerEntity.controller.jumpVelocity = 20;  // Space key for upward thrust
+    playerEntity.controller.walkVelocity = 12;  // WASD horizontal movement
+    playerEntity.controller.runVelocity = 22;   // Shift + WASD for faster flying
 
     // Attach broomstick visual
     const broomstick = new Entity({
@@ -543,8 +546,8 @@ startServer(world => {
     const colorHex = team.color.replace('#', '');
     world.chatManager.sendPlayerMessage(player, `🧙 Welcome to Quidditch!`, colorHex);
     world.chatManager.sendPlayerMessage(player, `You've been assigned to ${team.name}!`, colorHex);
-    world.chatManager.sendPlayerMessage(player, 'Controls: WASD to fly, Space to ascend, Shift to descend');
-    world.chatManager.sendPlayerMessage(player, 'Right-click or E to pickup/throw balls!');
+    world.chatManager.sendPlayerMessage(player, 'Controls: WASD to fly, Space to ascend, Shift to fly faster!');
+    world.chatManager.sendPlayerMessage(player, 'Use /pickup or /throw to grab and toss balls!');
 
     announce(`${playerName} joined ${team.name}!`);
     broadcastScoreboard();
