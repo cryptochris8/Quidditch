@@ -526,31 +526,15 @@ startServer(world => {
 
     // Custom vertical flight controls (Space to ascend, Ctrl to descend)
     playerEntity.controller.on(BaseEntityControllerEvent.TICK_WITH_PLAYER_INPUT, ({ input }) => {
-      const currentVelocity = playerEntity.velocity;
-
       // Space key - fly upward
       if (input.space) {
-        playerEntity.setVelocity({
-          x: currentVelocity.x,
-          y: FLYING_SPEED.vertical,
-          z: currentVelocity.z,
-        });
+        const upwardForce = FLYING_SPEED.vertical * playerEntity.mass;
+        playerEntity.applyImpulse({ x: 0, y: upwardForce, z: 0 });
       }
       // Ctrl key - fly downward
       else if (input.ctrl) {
-        playerEntity.setVelocity({
-          x: currentVelocity.x,
-          y: -FLYING_SPEED.vertical,
-          z: currentVelocity.z,
-        });
-      }
-      // No vertical input - stop vertical movement
-      else if (Math.abs(currentVelocity.y) > 0.1) {
-        playerEntity.setVelocity({
-          x: currentVelocity.x,
-          y: currentVelocity.y * 0.9, // Gradual slowdown
-          z: currentVelocity.z,
-        });
+        const downwardForce = -FLYING_SPEED.vertical * playerEntity.mass;
+        playerEntity.applyImpulse({ x: 0, y: downwardForce, z: 0 });
       }
     });
 
