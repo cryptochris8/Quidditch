@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+index.mjs
+.hytopia/
+
+# Development
+.claude/
+.cursor/
+dev/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
