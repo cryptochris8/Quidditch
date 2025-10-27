@@ -11,6 +11,7 @@ import {
   Entity,
   DefaultPlayerEntity,
   PlayerEvent,
+  BaseEntityControllerEvent,
   type World,
   type Player,
 } from 'hytopia';
@@ -55,6 +56,12 @@ const PHYSICS = {
   drag: 0.08,
   bludgerKnockback: 28,
   stunMs: 800,
+};
+
+const FLYING_SPEED = {
+  vertical: 15,  // Speed for ascending/descending
+  horizontal: 12,
+  turbo: 22,
 };
 
 const SCORE_QUAFFLE = 10;
@@ -514,8 +521,38 @@ startServer(world => {
 
     // Enhanced movement speeds for broomstick flying
     playerEntity.controller.jumpVelocity = 20;  // Space key for upward thrust
-    playerEntity.controller.walkVelocity = 12;  // WASD horizontal movement
-    playerEntity.controller.runVelocity = 22;   // Shift + WASD for faster flying
+    playerEntity.controller.walkVelocity = FLYING_SPEED.horizontal;  // WASD horizontal movement
+    playerEntity.controller.runVelocity = FLYING_SPEED.turbo;   // Shift + WASD for faster flying
+
+    // Custom vertical flight controls (Space to ascend, Ctrl to descend)
+    playerEntity.controller.on(BaseEntityControllerEvent.TICK_WITH_PLAYER_INPUT, ({ input }) => {
+      const currentVelocity = playerEntity.velocity;
+
+      // Space key - fly upward
+      if (input.space) {
+        playerEntity.setVelocity({
+          x: currentVelocity.x,
+          y: FLYING_SPEED.vertical,
+          z: currentVelocity.z,
+        });
+      }
+      // Ctrl key - fly downward
+      else if (input.ctrl) {
+        playerEntity.setVelocity({
+          x: currentVelocity.x,
+          y: -FLYING_SPEED.vertical,
+          z: currentVelocity.z,
+        });
+      }
+      // No vertical input - stop vertical movement
+      else if (Math.abs(currentVelocity.y) > 0.1) {
+        playerEntity.setVelocity({
+          x: currentVelocity.x,
+          y: currentVelocity.y * 0.9, // Gradual slowdown
+          z: currentVelocity.z,
+        });
+      }
+    });
 
     // Attach broomstick visual
     const broomstick = new Entity({
@@ -546,7 +583,7 @@ startServer(world => {
     const colorHex = team.color.replace('#', '');
     world.chatManager.sendPlayerMessage(player, `🧙 Welcome to Quidditch!`, colorHex);
     world.chatManager.sendPlayerMessage(player, `You've been assigned to ${team.name}!`, colorHex);
-    world.chatManager.sendPlayerMessage(player, 'Controls: WASD to fly, Space to ascend, Shift to fly faster!');
+    world.chatManager.sendPlayerMessage(player, 'Controls: WASD to fly, Space=UP, Ctrl=DOWN, Shift=TURBO');
     world.chatManager.sendPlayerMessage(player, 'Use /pickup or /throw to grab and toss balls!');
 
     announce(`${playerName} joined ${team.name}!`);
