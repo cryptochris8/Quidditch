@@ -525,22 +525,17 @@ startServer(world => {
     playerEntity.controller.runVelocity = FLYING_SPEED.turbo;   // Shift + WASD for faster flying
 
     // Custom vertical flight controls (Space to ascend, C to descend)
-    // Using continuous force application for smoother flying
-    playerEntity.controller.on(BaseEntityControllerEvent.TICK_WITH_PLAYER_INPUT, ({ input, deltaTimeMs }) => {
-      const dt = deltaTimeMs / 1000; // Convert to seconds
-      const forceMultiplier = 25; // Stronger force for noticeable effect
+    // Using continuous force application for smooth vertical movement
+    playerEntity.controller.on(BaseEntityControllerEvent.TICK_WITH_PLAYER_INPUT, ({ input }) => {
+      const forceMultiplier = 3; // Gentle force for controlled vertical flight
 
-      // Space key (sp) - fly upward (continuous force)
+      // Space key (sp) - fly upward
       if (input.sp) {
-        const upwardForce = forceMultiplier * playerEntity.mass;
-        playerEntity.applyImpulse({ x: 0, y: upwardForce, z: 0 });
-        console.log(`⬆️ Flying UP - Applied force: ${upwardForce}`);
+        playerEntity.applyImpulse({ x: 0, y: forceMultiplier * playerEntity.mass, z: 0 });
       }
-      // C key - fly downward (continuous force)
+      // C key - fly downward
       if (input.c) {
-        const downwardForce = -forceMultiplier * playerEntity.mass;
-        playerEntity.applyImpulse({ x: 0, y: downwardForce, z: 0 });
-        console.log(`⬇️ Flying DOWN - Applied force: ${downwardForce}`);
+        playerEntity.applyImpulse({ x: 0, y: -forceMultiplier * playerEntity.mass, z: 0 });
       }
     });
 
