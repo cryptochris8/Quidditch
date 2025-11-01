@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "hytopia-mcp": {
+      "type": "http",
+      "url": "https://ai.hytopia.com/mcp"
+    }
+  }
+}
