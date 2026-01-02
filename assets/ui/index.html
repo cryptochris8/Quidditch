@@ -98,5 +98,21 @@ and also configure additional buttons for mobile compatibility.
     transform: scale(0.92);
     background-color: rgba(0, 0, 0, 0.75);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  }  
+  }
 </style>
+
+<!-- Load SDK-compliant mobile controls -->
+<script>
+(function() {
+  fetch('{{CDN_ASSETS_URL}}/ui/mobile-controls.html')
+    .then(response => response.text())
+    .then(html => {
+      const container = document.createElement('div');
+      container.id = 'mobile-controls-container';
+      container.innerHTML = html;
+      document.body.appendChild(container);
+      console.log('[Mobile Controls] Loaded successfully');
+    })
+    .catch(err => console.error('[Mobile Controls] Failed to load:', err));
+})();
+</script>
